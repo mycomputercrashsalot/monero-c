@@ -83,9 +83,12 @@ rm -rf "$aar/licenses/source"
 # fixed times and sorted names give the same bytes for the same inputs
 epoch=${SOURCE_DATE_EPOCH:-$(git -C "$root" log -1 --format=%ct 2>/dev/null || date +%s)}
 export TZ=UTC
-find "$stage/jar" -exec touch -h -d "@$epoch" {} +
+# BSD touch (macOS) reads no @epoch, so the time goes to every touch in the format that
+# both it and GNU touch take, from the date of the system that runs the script
+if date -r 0 > /dev/null 2>&1; then time=$(date -r "$epoch" +%Y%m%d%H%M.%S); else time=$(date -d "@$epoch" +%Y%m%d%H%M.%S); fi
+find "$stage/jar" -exec touch -h -t "$time" {} +
 (cd "$stage/jar" && { echo META-INF/MANIFEST.MF; find META-INF -type f ! -name MANIFEST.MF | LC_ALL=C sort; } | zip -qX "$aar/classes.jar" -@)
-find "$aar" -exec touch -h -d "@$epoch" {} +
+find "$aar" -exec touch -h -t "$time" {} +
 
 mkdir -p "$out"
 out=$(cd "$out" && pwd)
