@@ -62,7 +62,8 @@ done
 for notice in LICENSE THIRD-PARTY-NOTICES.md; do
   [ -s "$work/jar/META-INF/monero-native/$notice" ] || fail "classes.jar has no $notice"
 done
-for license in $(find "$common/licenses" -type f ! -path '*/source/*' -printf '%P\n'); do
+# -printf is of GNU find only, so the names of the files come from a subshell that find and sed give on every system
+for license in $(cd "$common/licenses" && find . -type f ! -path './source/*' | sed 's#^\./##'); do
   [ -s "$work/jar/META-INF/monero-native/licenses/$license" ] || fail "classes.jar has no licenses/$license"
 done
 [ ! -e "$aar/licenses/source" ] && [ ! -e "$work/jar/META-INF/monero-native/licenses/source" ] || fail "the libusb source archive is in the archive, and the libraries link no libusb"

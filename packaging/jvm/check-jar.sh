@@ -55,7 +55,8 @@ for notice in LICENSE THIRD-PARTY-NOTICES.md; do
   [ -s "$work/META-INF/monero-native/$notice" ] || fail "no $notice"
 done
 # every platform here links libusb as a shared library, so the source of it goes with the license texts
-for license in $(find "$common/licenses" -type f -printf '%P\n'); do
+# -printf is of GNU find only, so the names of the files come from a subshell that find and sed give on every system
+for license in $(cd "$common/licenses" && find . -type f | sed 's#^\./##'); do
   [ -s "$work/META-INF/monero-native/licenses/$license" ] || fail "no licenses/$license"
 done
 [ -s "$work/META-INF/monero-native/licenses/source/libusb-1.0.27.tar.bz2" ] || fail "no source archive of libusb"
