@@ -168,7 +168,6 @@ MONERO_EXPORT void monero_utils_free_secret(char* secret);
 
 /** Patch version of the C ABI. It changes for fixes that leave the ABI as it is. */
 #define MONERO_C_ABI_VERSION_PATCH 0
->>>>>>> deb8da3 (wallet: light wallets behind the C ABI)
 
 /**
  * Get the version of the C ABI of the loaded library. A binding compares it with the version it
